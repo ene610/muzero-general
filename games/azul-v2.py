@@ -756,6 +756,8 @@ class Azul:
         #traduci azione da 14 a [1,2,3]
         action_pit_choice , action_tile_type, action_column_choice = self.game.from_action_to_tuple_action(action)
         
+        #controlla azione sia valida
+        valid_move = self.game.valid_move("P1", action_pit_choice, action_tile_type, action_column_choice)
         #fai azione
         self.game.play_turn(self.game.player_turn, action_pit_choice, action_tile_type, action_column_choice)
 
@@ -778,7 +780,13 @@ class Azul:
 
         done = self.have_winner()
 
-        reward = 10 - self.game.penality_for_action 
+        if valid_move:
+            if(action_column_choice != 5):
+                reward = 10 - self.game.penality_for_action 
+            else:
+                reward = 0 - self.game.penality_for_action 
+        else:
+            reward = 0 - 50
 
         self.player = 0 if self.game.play_turn == "P1" else 1
 
